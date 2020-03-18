@@ -1,3 +1,7 @@
 Goal: 
 2 bars on each side, 1 bot, 1 ai, with increasing levels of difficulty
 Balls reflect off each side, and goal is to not let the ball get past your side
+
+Next tasks
+- add ball
+- add ball physics

@@ -3,5 +3,10 @@ Goal:
 Balls reflect off each side, and goal is to not let the ball get past your side
 
 Next tasks
-- add ball
-- add ball physics
+- make ball be able to travel with angles - line 70
+- make ball bounce off angles
+- make balls bounce of walls
+
+Other
+- limit to movement
+

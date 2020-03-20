@@ -2,10 +2,8 @@ from pygame.locals import *
 import pygame
 
 #game physics
-def collision(stick1, stick2, ball, windowWidth, windowHeight):
-	return stick_ball_collision(stick1, stick2, ball) or wall_ball_collision(windowWidth, windowHeight, ball)
 
-def stick_ball_collision(stick1, stick2, ball):
+def stick_ball_collision_update(stick1, stick2, ball):
 	x1 = stick1.x
 	y1 = stick1.y
 	x2 = stick2.x
@@ -21,15 +19,17 @@ def stick_ball_collision(stick1, stick2, ball):
 	bot_y1 = y1 + (sizeStick - 1) * 20	
 
 	if x3 >= x2-20 and (y3 >= top_y2 and y3 <= bot_y2): 
-		return True
+		ball.xVelocity*=-1
 	if x3 <= x1+15 and (y3 >= top_y1 and y3 <= bot_y1):
-		return True 
+		ball.xVelocity*=-1
 
 	return False
 
-def wall_ball_collision(windowWidth, windowHeight, ball):
-	return ball.x == windowWidth or ball.x == 0 or ball.y == windowHeight or ball.y == 0
-	return False
+def wall_ball_collision_update(ball, windowWidth, windowHeight):	
+		if ball.x > windowWidth or ball.x < 0: 
+			ball.xVelocity*=-1
+		if ball.y > windowHeight or ball.y < 0:
+			ball.yVelocity*=-1
 
 class Stick:
 	def __init__(self, size, x, y):
@@ -53,25 +53,18 @@ class Ball:
 	def __init__(self, x, y, speed):
 		self.x = x
 		self.y = y
-		self.direction = 'left'
 		self.speed = speed
+		self.xVelocity = self.speed
+		self.yVelocity = self.speed
 
 	def render(self, surface, image):
 		surface.blit(image, (self.x, self.y)) 
 
 	def update(self):
-		if (self.direction == 'left'): 
-			self.moveLeft()
-		else: 
-			self.moveRight()
+		self.x+=self.xVelocity
+		self.y+=self.yVelocity
 
-	def moveLeft(self):
-		self.x+=self.speed
-		self.y = 300 + 1.1*(self.x - 500) # equiv y = 1.1x
-		print(self.y)
 
-	def moveRight(self):
-		self.x-=self.speed
 
 class App:
 	windowWidth = 1000
@@ -83,7 +76,7 @@ class App:
 		self._ball_image = None
 		self._stick1 = Stick(5, 50, 250)
 		self._stick2 = Stick(5, 950, 250)
-		self._ball = Ball(500, 300, 0.1)
+		self._ball = Ball(500, 300, 0.5)
 
 	def init(self):
 		pygame.init()
@@ -94,8 +87,9 @@ class App:
 
 	def loop(self):
 		self._ball.update()
-		if (collision(self._stick1, self._stick2, self._ball, self.windowWidth, self.windowHeight)): 
-			self._ball.direction = 'right' if (self._ball.direction == 'left') else 'left' 
+		stick_ball_collision_update(self._stick1, self._stick2, self._ball)
+		wall_ball_collision_update(self._ball, self.windowWidth, self.windowHeight)
+
 
 	def render(self):
 		self._background.fill((0,0,0))

@@ -3,9 +3,10 @@ Goal:
 Balls reflect off each side, and goal is to not let the ball get past your side
 
 Next tasks
-- make ball be able to travel with angles - line 70
-- make ball bounce off angles
-- make balls bounce of walls
+- clean up physics (balls can bounce off edge of sticks)
+- add game ui - choose speed
+	- able to see points/losses
+	- can play against wall
 
 Other
 - limit to movement
